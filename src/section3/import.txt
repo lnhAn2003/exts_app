@@ -1,0 +1,12 @@
+Sự khác biệt giữa ES Modules và CommonJS
+Đặc điểm	            ES Modules (ESM)	            CommonJS (CJS)
+Cú pháp import	        import { ... } from '...';	    const ... = require('...');
+Cú pháp export	        export hoặc export default	    module.exports = ...;
+Thời điểm đánh giá      Đánh giá theo kiểu tĩnh	        Đánh giá theo kiểu động
+Hỗ trợ trình duyệt	    Được hỗ trợ trực tiếp	        Không hỗ trợ trực tiếp
+Thay đổi đường dẫn	    Yêu cầu phần mở rộng .js	    Không yêu cầu phần mở rộng .js
+
+=> ESM được đánh giá tĩnh, nghĩa là tất cả các import và export được xác định trong 
+quá trình biên dịch (compile-time), giúp phát hiện lỗi sớm hơn.
+=> CommonJS là động, nghĩa là các module được đánh giá và import tại thời điểm thực thi (runtime), 
+do đó linh hoạt hơn nhưng cũng có thể phát sinh lỗi trong runtime.

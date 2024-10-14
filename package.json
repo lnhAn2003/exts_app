@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/app.ts",
+    "start": "ts-node src/section3/interface.ts",
     "build": "tsc",
     "serve": "node app.js",
-    "dev" : "node src/buffer.js" 
+    "dev" : "node src/section3/main.js" 
   },
   "keywords": [],
   "author": "",

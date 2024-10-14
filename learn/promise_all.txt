@@ -1,0 +1,127 @@
+**`Promise.all`** là một phương thức trong JavaScript cho phép thực thi song song nhiều Promise và trả về một Promise mới. Promise này sẽ hoàn thành khi tất cả các Promise trong mảng đầu vào đều hoàn thành (trạng thái "fulfilled"), hoặc bị từ chối (trạng thái "rejected") nếu bất kỳ Promise nào trong mảng bị từ chối.
+
+### 1. Cách sử dụng `Promise.all`
+
+Cú pháp:
+```javascript
+Promise.all([promise1, promise2, promise3, ...])
+```
+
+- `Promise.all` nhận vào một mảng các Promise và trả về một Promise mới.
+- Kết quả trả về là một mảng các kết quả của từng Promise trong mảng đầu vào, theo đúng thứ tự mà chúng xuất hiện.
+- Nếu bất kỳ Promise nào bị từ chối, Promise được trả về bởi `Promise.all` sẽ bị từ chối với lý do từ chối của Promise đó.
+
+### 2. Ví dụ về `Promise.all`
+
+#### 2.1. Ví dụ đơn giản
+Dưới đây là một ví dụ về việc sử dụng `Promise.all` để đợi nhiều Promise hoàn thành cùng lúc:
+
+```javascript
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve) => setTimeout(resolve, 1000, "Hello"));
+const promise3 = Promise.resolve("World");
+
+Promise.all([promise1, promise2, promise3])
+  .then((results) => {
+    console.log(results); // Kết quả: [3, "Hello", "World"]
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+```
+
+- Trong ví dụ này:
+  - `promise1` hoàn thành ngay lập tức với giá trị `3`.
+  - `promise2` hoàn thành sau 1 giây với giá trị `"Hello"`.
+  - `promise3` hoàn thành ngay lập tức với giá trị `"World"`.
+- `Promise.all` đợi cả ba Promise hoàn thành, và trả về một mảng chứa các kết quả: `[3, "Hello", "World"]`.
+
+#### 2.2. Ví dụ khi một Promise bị từ chối
+Nếu một trong các Promise bị từ chối, `Promise.all` sẽ bị từ chối ngay lập tức với lý do từ chối của Promise đó, và các Promise khác sẽ bị bỏ qua.
+
+```javascript
+const promise1 = Promise.resolve(3);
+const promise2 = Promise.reject("Có lỗi xảy ra");
+const promise3 = Promise.resolve("World");
+
+Promise.all([promise1, promise2, promise3])
+  .then((results) => {
+    console.log(results); // Không bao giờ chạy vì promise2 bị từ chối
+  })
+  .catch((error) => {
+    console.error(error); // Kết quả: "Có lỗi xảy ra"
+  });
+```
+
+- Trong ví dụ này, vì `promise2` bị từ chối, nên `Promise.all` cũng sẽ bị từ chối với lỗi `"Có lỗi xảy ra"`, và không trả về kết quả của các Promise khác.
+
+### 3. Ứng dụng thực tế của `Promise.all`
+
+#### 3.1. Gọi nhiều API song song
+Một ví dụ phổ biến về việc sử dụng `Promise.all` là thực hiện nhiều lời gọi API song song và xử lý tất cả kết quả khi chúng đều hoàn thành.
+
+```javascript
+const fetchData1 = () => new Promise((resolve) => setTimeout(resolve, 1000, "Data 1"));
+const fetchData2 = () => new Promise((resolve) => setTimeout(resolve, 2000, "Data 2"));
+const fetchData3 = () => new Promise((resolve) => setTimeout(resolve, 3000, "Data 3"));
+
+Promise.all([fetchData1(), fetchData2(), fetchData3()])
+  .then((results) => {
+    console.log(results); // Kết quả: ["Data 1", "Data 2", "Data 3"]
+  })
+  .catch((error) => {
+    console.error("Đã xảy ra lỗi:", error);
+  });
+```
+
+- Trong ví dụ này, `fetchData1`, `fetchData2`, và `fetchData3` hoàn thành lần lượt sau 1 giây, 2 giây, và 3 giây. `Promise.all` đợi cả ba hoàn thành trước khi trả về kết quả.
+
+#### 3.2. Tải nhiều tệp hoặc dữ liệu song song
+Bạn có thể sử dụng `Promise.all` để tải nhiều tệp hoặc dữ liệu cùng lúc và xử lý khi tất cả đã được tải xong.
+
+```javascript
+const loadFile1 = () => new Promise((resolve) => setTimeout(resolve, 1000, "File 1 loaded"));
+const loadFile2 = () => new Promise((resolve) => setTimeout(resolve, 2000, "File 2 loaded"));
+const loadFile3 = () => new Promise((resolve) => setTimeout(resolve, 1500, "File 3 loaded"));
+
+Promise.all([loadFile1(), loadFile2(), loadFile3()])
+  .then((results) => {
+    console.log(results); // Kết quả: ["File 1 loaded", "File 2 loaded", "File 3 loaded"]
+  })
+  .catch((error) => {
+    console.error("Lỗi khi tải tệp:", error);
+  });
+```
+
+### 4. Kết hợp `Promise.all` với Async / Await
+Bạn có thể sử dụng `Promise.all` cùng với **Async / Await** để làm cho mã nguồn dễ đọc hơn.
+
+#### Ví dụ với Async / Await
+```javascript
+const fetchData1 = () => new Promise((resolve) => setTimeout(resolve, 1000, "Data 1"));
+const fetchData2 = () => new Promise((resolve) => setTimeout(resolve, 2000, "Data 2"));
+const fetchData3 = () => new Promise((resolve) => setTimeout(resolve, 3000, "Data 3"));
+
+async function fetchAllData() {
+  try {
+    const results = await Promise.all([fetchData1(), fetchData2(), fetchData3()]);
+    console.log(results); // Kết quả: ["Data 1", "Data 2", "Data 3"]
+  } catch (error) {
+    console.error("Đã xảy ra lỗi:", error);
+  }
+}
+
+fetchAllData();
+```
+
+- Trong ví dụ này, `await` sẽ đợi tất cả các Promise trong `Promise.all` hoàn thành trước khi tiếp tục thực thi các dòng lệnh tiếp theo. Nếu một Promise bị từ chối, mã trong khối `catch` sẽ được thực thi.
+
+### 5. Một số lưu ý khi sử dụng `Promise.all`
+- **`Promise.all` hoàn thành nhanh hơn**: `Promise.all` sẽ hoàn thành nhanh nhất khi tất cả các Promise trong mảng đều hoàn thành. Thời gian hoàn thành là thời gian của Promise lâu nhất trong mảng.
+- **Xử lý lỗi trong `Promise.all`**: Nếu một Promise bị từ chối, toàn bộ `Promise.all` sẽ bị từ chối và không tiếp tục xử lý các Promise còn lại.
+- **Thứ tự kết quả**: Kết quả của `Promise.all` luôn trả về theo đúng thứ tự của các Promise trong mảng, dù các Promise hoàn thành theo thời gian khác nhau.
+
+### Kết luận
+`Promise.all` là một công cụ hữu ích để xử lý nhiều tác vụ bất đồng bộ song song 
+và đợi tất cả hoàn thành. Việc sử dụng `Promise.all` giúp tăng hiệu suất khi thực thi nhiều 
+tác vụ đồng thời và đảm bảo mã nguồn trở nên gọn gàng và dễ duy trì hơn.

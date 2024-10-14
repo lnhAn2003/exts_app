@@ -1,0 +1,110 @@
+**Nullish Coalescing** (`??`) là một toán tử trong JavaScript được giới thiệu từ ES2020, cho phép bạn kiểm tra và trả về giá trị bên phải nếu giá trị bên trái là `null` hoặc `undefined`. Ngược lại, nếu giá trị bên trái khác `null` và `undefined`, thì toán tử sẽ trả về giá trị bên trái.
+
+### 1. Cách sử dụng Nullish Coalescing
+- Cú pháp: `x ?? y`
+  - `x` là biểu thức bên trái.
+  - `y` là biểu thức bên phải.
+  - Toán tử sẽ trả về `y` nếu `x` là `null` hoặc `undefined`, ngược lại, trả về `x`.
+
+Ví dụ:
+```javascript
+const name = null;
+const defaultName = "Anonymous";
+
+const displayName = name ?? defaultName;
+console.log(displayName); // Kết quả: "Anonymous"
+```
+
+- Trong ví dụ trên, `name` có giá trị là `null`, nên `defaultName` được trả về.
+
+### 2. Sự khác biệt giữa Nullish Coalescing (`??`) và Toán tử OR (`||`)
+- Toán tử OR (`||`) trả về biểu thức bên phải nếu biểu thức bên trái là **giá trị falsy**. Các giá trị falsy bao gồm: `false`, `0`, `""` (chuỗi rỗng), `null`, `undefined`, và `NaN`.
+- Trong khi đó, Nullish Coalescing (`??`) chỉ trả về biểu thức bên phải nếu biểu thức bên trái là **`null` hoặc `undefined`**, các giá trị falsy khác vẫn được coi là hợp lệ.
+
+Ví dụ so sánh:
+```javascript
+// Sử dụng toán tử OR (||)
+const number1 = 0;
+const result1 = number1 || 5;
+console.log(result1); // Kết quả: 5 (vì 0 là falsy)
+
+// Sử dụng Nullish Coalescing (??)
+const number2 = 0;
+const result2 = number2 ?? 5;
+console.log(result2); // Kết quả: 0 (vì 0 không phải là null hoặc undefined)
+```
+
+### 3. Kết hợp với Optional Chaining
+- Nullish Coalescing thường được sử dụng cùng với **Optional Chaining** (`?.`) để cung cấp giá trị mặc định khi thuộc tính không tồn tại.
+
+Ví dụ:
+```javascript
+const user = {
+  profile: {
+    name: "Nam"
+    // age không tồn tại
+  }
+};
+
+const userName = user.profile?.name ?? "Không có tên";
+console.log(userName); // Kết quả: "Nam"
+
+const userAge = user.profile?.age ?? "Không có tuổi";
+console.log(userAge); // Kết quả: "Không có tuổi"
+```
+
+- Trong ví dụ này, `user.profile?.name` trả về `"Nam"`, còn `user.profile?.age` trả về `undefined`, và `"Không có tuổi"` được sử dụng làm giá trị mặc định.
+
+### 4. Lưu ý khi sử dụng Nullish Coalescing
+- **Nullish Coalescing** (`??`) không thể được sử dụng cùng với các toán tử logic khác mà không có dấu ngoặc đơn bao quanh. Nếu bạn muốn kết hợp với các toán tử như `&&` hoặc `||`, cần sử dụng dấu ngoặc để xác định thứ tự ưu tiên.
+
+Ví dụ:
+```javascript
+const value = null;
+const result = (value ?? "Giá trị mặc định") && "Chuỗi khác";
+console.log(result); // Kết quả: "Chuỗi khác"
+```
+
+### 5. Ứng dụng thực tế của Nullish Coalescing
+#### 5.1. Đặt giá trị mặc định cho biến
+- Nullish Coalescing rất hữu ích để đặt giá trị mặc định khi giá trị hiện tại là `null` hoặc `undefined`.
+
+```javascript
+const input = null;
+const value = input ?? "Giá trị mặc định";
+console.log(value); // Kết quả: "Giá trị mặc định"
+```
+
+#### 5.2. Xử lý dữ liệu từ API
+- Khi nhận dữ liệu từ API, một số thuộc tính có thể không tồn tại hoặc là `null`. Nullish Coalescing giúp đặt giá trị mặc định một cách dễ dàng.
+
+```javascript
+const response = {
+  data: {
+    name: "Nam",
+    age: null
+  }
+};
+
+const userName = response.data.name ?? "Không có tên";
+const userAge = response.data.age ?? "Không có tuổi";
+
+console.log(userName); // Kết quả: "Nam"
+console.log(userAge); // Kết quả: "Không có tuổi"
+```
+
+#### 5.3. Tránh giá trị mặc định không mong muốn
+- Trong một số trường hợp, các giá trị như `0`, `false`, hoặc chuỗi rỗng `""` là hợp lệ. Nullish Coalescing cho phép giữ nguyên các giá trị này thay vì thay thế bằng giá trị mặc định.
+
+```javascript
+const count = 0;
+const result = count ?? 10;
+console.log(result); // Kết quả: 0 (vì 0 không phải là null hoặc undefined)
+```
+
+### 6. Kết luận
+**Nullish Coalescing** (`??`) là một tính năng hữu ích trong JavaScript, 
+cho phép bạn kiểm tra và đặt giá trị mặc định chỉ khi giá trị là `null` hoặc `undefined`. 
+Điều này giúp tránh các vấn đề phát sinh với các giá trị falsy khác như `0`, `false`, hoặc `""`, 
+mà vẫn được coi là hợp lệ. Việc kết hợp với **Optional Chaining** (`?.`) sẽ giúp bạn truy cập dữ liệu 
+an toàn và hiệu quả hơn.
