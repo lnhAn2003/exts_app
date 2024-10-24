@@ -1,0 +1,129 @@
+Private NPM (hay NPM private registry) cho phép bạn tạo và quản lý các package riêng tư, chỉ có thể truy cập và sử dụng bởi bạn hoặc một nhóm cụ thể trong tổ chức của bạn. Điều này rất hữu ích khi bạn có những thư viện, module, hoặc dự án mà bạn không muốn công khai trên NPM công cộng.
+
+Dưới đây là hướng dẫn chi tiết về cách sử dụng và quản lý Private NPM:
+
+### 1. **Tạo và quản lý Private Packages trên NPM**
+   - Để tạo một package riêng tư, bạn cần có tài khoản NPM trả phí (NPM Pro hoặc NPM Enterprise). Với tài khoản này, bạn có thể xuất bản các package riêng tư.
+   
+   - **Tạo package riêng tư**:
+     1. Đầu tiên, đảm bảo bạn đã đăng nhập vào tài khoản NPM:
+        ```bash
+        npm login
+        ```
+     2. Khởi tạo package như bình thường:
+        ```bash
+        npm init
+        ```
+     3. Để đánh dấu package là riêng tư, trong `package.json`, thêm thuộc tính `"private": true`:
+        ```json
+        {
+          "name": "@your-scope/your-package",
+          "version": "1.0.0",
+          "private": true,
+          "description": "A private package example",
+          "main": "index.js"
+        }
+        ```
+     4. Cuối cùng, xuất bản package lên NPM:
+        ```bash
+        npm publish --access=restricted
+        ```
+     - `--access=restricted` giúp chỉ định rằng package này sẽ là riêng tư.
+
+### 2. **Tạo và sử dụng Scope để quản lý packages**
+   - **Scopes** giúp bạn quản lý package tốt hơn, đặc biệt là trong môi trường tổ chức. Một scope là một tên miền tiền tố (prefix) được dùng cho các package của bạn, ví dụ: `@your-company/package-name`.
+   
+   - **Khởi tạo package với scope**:
+     ```bash
+     npm init --scope=@your-company
+     ```
+   
+   - Khi bạn sử dụng scope, bạn có thể dễ dàng chia sẻ và quản lý các package trong nội bộ tổ chức.
+
+### 3. **Cài đặt Private Packages**
+   - Để cài đặt một package riêng tư, bạn cần đảm bảo rằng bạn đã đăng nhập và có quyền truy cập vào package đó:
+     ```bash
+     npm login
+     ```
+   - Sau đó, cài đặt package như bình thường:
+     ```bash
+     npm install @your-scope/your-package
+     ```
+
+### 4. **Sử dụng Private NPM Registry của riêng bạn**
+   - Ngoài việc sử dụng NPM registry chính thức, bạn có thể tạo một private NPM registry của riêng mình bằng cách sử dụng các giải pháp như **Verdaccio**, **Sinopia**, hoặc **Artifactory**. Những giải pháp này cho phép bạn host package riêng tư trong mạng nội bộ, đảm bảo tính bảo mật và kiểm soát tối đa.
+   
+   - **Verdaccio** là một giải pháp phổ biến và dễ triển khai:
+     1. Cài đặt Verdaccio:
+        ```bash
+        npm install -g verdaccio
+        ```
+     2. Khởi chạy Verdaccio:
+        ```bash
+        verdaccio
+        ```
+     3. Sau khi Verdaccio chạy, bạn sẽ có một NPM registry riêng tại địa chỉ `http://localhost:4873`.
+     4. Để kết nối NPM với registry này, sử dụng:
+        ```bash
+        npm set registry http://localhost:4873
+        ```
+     5. Đăng nhập vào Verdaccio với tài khoản mới:
+        ```bash
+        npm adduser --registry http://localhost:4873
+        ```
+     6. Sau đó, bạn có thể publish và cài đặt package vào registry này:
+        ```bash
+        npm publish --registry http://localhost:4873
+        npm install <package-name> --registry http://localhost:4873
+        ```
+
+### 5. **Quản lý quyền truy cập và nhóm (Teams)**
+   - Với NPM Pro hoặc NPM Enterprise, bạn có thể tạo và quản lý các **Teams** (nhóm người dùng) để kiểm soát quyền truy cập vào các package riêng tư.
+   - Để thêm người dùng hoặc nhóm vào package, sử dụng:
+     ```bash
+     npm access grant read-write @your-scope:developers @your-scope/your-package
+     ```
+   - Để kiểm tra quyền hiện tại của một package:
+     ```bash
+     npm access ls-packages
+     ```
+   - Bạn cũng có thể thu hồi quyền truy cập bằng:
+     ```bash
+     npm access revoke @your-scope:developers @your-scope/your-package
+     ```
+
+### 6. **Sử dụng `.npmrc` để quản lý cấu hình**
+   - Để đảm bảo rằng các lệnh NPM của bạn sử dụng đúng registry và quyền truy cập, bạn có thể cấu hình file `.npmrc`.
+   - Ví dụ `.npmrc` cho private registry:
+     ```
+     registry=https://registry.npmjs.org/
+     @your-scope:registry=https://npm.yourcompany.com/
+     //npm.yourcompany.com/:_authToken=YOUR_AUTH_TOKEN
+     ```
+   - File này sẽ chỉ định rằng tất cả các package thuộc scope `@your-scope` sẽ được tải từ registry `npm.yourcompany.com`.
+
+### 7. **Cách làm việc với các CI/CD và private package**
+   - Khi triển khai CI/CD, bạn có thể cần thiết lập các biến môi trường để chứa token đăng nhập NPM. Điều này giúp CI/CD pipeline có thể cài đặt và cập nhật các package riêng tư mà không cần đăng nhập thủ công.
+   - Đặt token dưới dạng biến môi trường:
+     ```bash
+     NPM_TOKEN=your-token
+     ```
+   - Trong file `.npmrc`, bạn có thể sử dụng biến này:
+     ```
+     //registry.npmjs.org/:_authToken=${NPM_TOKEN}
+     ```
+
+### 8. **Kiểm tra và bảo trì private package**
+   - Sử dụng **`npm audit`** để kiểm tra bảo mật các package riêng tư.
+   - Dùng **`npm version`** để quản lý và cập nhật phiên bản của package.
+     ```bash
+     npm version patch
+     npm publish --access=restricted
+     ```
+
+### Lợi ích của Private NPM
+   - **Bảo mật**: Các package riêng tư không thể bị truy cập hoặc tải về bởi người dùng không có quyền.
+   - **Tùy biến**: Có thể tạo các module hoặc thư viện riêng cho công ty hoặc nhóm, không cần công khai lên NPM.
+   - **Kiểm soát**: Quản lý dễ dàng quyền truy cập, quản lý version và kiểm soát chặt chẽ việc phát hành.
+
+Việc sử dụng Private NPM hoặc NPM registry riêng giúp tăng tính bảo mật và kiểm soát tối đa cho các dự án của bạn. Nếu có bất kỳ câu hỏi nào hoặc bạn muốn hướng dẫn sâu hơn về một phần cụ thể, hãy cho mình biết nhé!
