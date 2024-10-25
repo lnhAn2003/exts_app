@@ -1,0 +1,152 @@
+**Optional chaining** (`?.`) là một tính năng trong JavaScript giúp truy cập các thuộc tính của đối tượng mà không cần phải kiểm tra xem các đối tượng trung gian có tồn tại hay không. Nếu bất kỳ đối tượng nào trong chuỗi truy cập không tồn tại (là `null` hoặc `undefined`), thì kết quả sẽ trả về `undefined` thay vì gây ra lỗi.
+
+### 1. Cách sử dụng Optional Chaining
+
+#### 1.1. Truy cập thuộc tính của đối tượng
+- Bạn có thể sử dụng `?.` để truy cập thuộc tính của đối tượng một cách an toàn.
+- Nếu đối tượng hoặc thuộc tính trước dấu `?.` là `null` hoặc `undefined`, thì kết quả sẽ trả về `undefined` mà không gây ra lỗi.
+
+Ví dụ:
+```javascript
+const user = {
+  profile: {
+    name: "Nam",
+    age: 30
+  }
+};
+
+console.log(user.profile?.name); // Kết quả: "Nam"
+console.log(user.address?.city); // Kết quả: undefined (không gây lỗi)
+```
+
+- Trong ví dụ trên, `user.profile?.name` trả về `"Nam"` vì thuộc tính `profile` tồn tại. Trong khi đó, `user.address?.city` trả về `undefined` vì `address` không tồn tại, nhưng không gây ra lỗi.
+
+#### 1.2. Truy cập phần tử của mảng
+- Optional chaining có thể được sử dụng để truy cập phần tử trong mảng.
+
+Ví dụ:
+```javascript
+const users = [
+  { name: "Nam" },
+  { name: "Lan" }
+];
+
+console.log(users[0]?.name); // Kết quả: "Nam"
+console.log(users[2]?.name); // Kết quả: undefined (vì phần tử thứ 3 không tồn tại)
+```
+
+#### 1.3. Gọi hàm
+- Bạn có thể sử dụng `?.` để gọi một hàm một cách an toàn, kiểm tra xem hàm đó có tồn tại trước khi gọi.
+
+Ví dụ:
+```javascript
+const user = {
+  greet: () => "Xin chào!"
+};
+
+console.log(user.greet?.()); // Kết quả: "Xin chào!"
+console.log(user.sayHello?.()); // Kết quả: undefined (vì hàm sayHello không tồn tại)
+```
+
+### 2. Kết hợp với Nullish Coalescing (`??`)
+- Khi sử dụng optional chaining, kết quả trả về có thể là `undefined`. Để đặt giá trị mặc định khi kết quả là `undefined`, bạn có thể sử dụng **nullish coalescing** (`??`).
+
+Ví dụ:
+```javascript
+const user = {
+  profile: {
+    name: "Nam"
+  }
+};
+
+const userName = user.profile?.name ?? "Không có tên";
+console.log(userName); // Kết quả: "Nam"
+
+const userAge = user.profile?.age ?? "Không có tuổi";
+console.log(userAge); // Kết quả: "Không có tuổi" (vì age là undefined)
+```
+
+- Trong ví dụ này, `user.profile?.name` trả về `"Nam"`, còn `user.profile?.age` trả về `undefined`, và `"Không có tuổi"` được sử dụng làm giá trị mặc định.
+
+### 3. Optional Chaining trong việc truy cập thuộc tính lồng nhau
+- Optional chaining rất hữu ích khi làm việc với các đối tượng có cấu trúc phức tạp hoặc có thể chứa các giá trị `null` hoặc `undefined` ở bất kỳ mức nào.
+
+Ví dụ:
+```javascript
+const user = {
+  profile: {
+    address: {
+      city: "Hanoi"
+    }
+  }
+};
+
+console.log(user.profile?.address?.city); // Kết quả: "Hanoi"
+console.log(user.profile?.phone?.number); // Kết quả: undefined (vì phone không tồn tại)
+```
+
+### 4. Các trường hợp không thể sử dụng Optional Chaining
+
+#### 4.1. Sử dụng ở phía bên trái của toán tử gán
+- Optional chaining không thể được sử dụng để gán giá trị.
+
+```javascript
+const user = {};
+// user.profile?.name = "Nam"; // Sai: Optional chaining không thể dùng để gán giá trị
+```
+
+#### 4.2. Không được sử dụng với toán tử `delete`
+- Optional chaining không thể được sử dụng cùng với toán tử `delete` để xóa thuộc tính của đối tượng.
+
+```javascript
+const user = { name: "Nam" };
+// delete user?.name; // Sai: Optional chaining không được dùng với toán tử delete
+```
+
+### 5. Tại sao nên sử dụng Optional Chaining?
+
+- **An toàn hơn khi truy cập thuộc tính lồng nhau**: Giúp tránh các lỗi khi truy cập thuộc tính của đối tượng có thể là `null` hoặc `undefined`.
+- **Cú pháp ngắn gọn hơn**: Giúp mã nguồn gọn gàng hơn và tránh phải sử dụng nhiều câu lệnh điều kiện để kiểm tra xem thuộc tính có tồn tại hay không.
+- **Dễ đọc và duy trì**: Giúp mã nguồn dễ hiểu và dễ bảo trì hơn, đặc biệt khi làm việc với các đối tượng phức tạp hoặc dữ liệu từ API.
+
+### 6. Ví dụ thực tế
+
+#### 6.1. Làm việc với dữ liệu từ API
+Khi nhận dữ liệu từ API, một số thuộc tính có thể không tồn tại. Optional chaining giúp truy cập dữ liệu một cách an toàn mà không gây ra lỗi.
+
+```javascript
+const response = {
+  user: {
+    id: 1,
+    name: "Nam"
+    // email không tồn tại trong dữ liệu trả về
+  }
+};
+
+console.log(response.user?.email ?? "Không có email"); // Kết quả: "Không có email"
+```
+
+#### 6.2. Xử lý dữ liệu lồng nhau
+Khi làm việc với cấu trúc dữ liệu phức tạp hoặc lồng nhau, optional chaining giúp kiểm tra tính tồn tại của các đối tượng con.
+
+```javascript
+const config = {
+  database: {
+    host: "localhost",
+    port: 3306
+  }
+};
+
+const dbHost = config.database?.host ?? "Không có thông tin máy chủ";
+console.log(dbHost); // Kết quả: "localhost"
+
+const dbUser = config.database?.user ?? "Không có thông tin người dùng";
+console.log(dbUser); // Kết quả: "Không có thông tin người dùng"
+```
+
+### Kết luận
+**Optional chaining** (`?.`) là một tính năng hữu ích trong JavaScript, 
+giúp truy cập các thuộc tính của đối tượng một cách an toàn và ngăn ngừa 
+các lỗi do việc truy cập vào các thuộc tính không tồn tại. Việc kết hợp với 
+**nullish coalescing** (`??`) giúp đặt giá trị mặc định một cách dễ dàng khi gặp 
+giá trị `null` hoặc `undefined`.

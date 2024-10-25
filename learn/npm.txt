@@ -1,0 +1,137 @@
+*****Basic*****
+1.  npm init: Khởi tạo một dự án Node.js mới và tạo tệp package.json để lưu thông tin dự án. 
+    Bạn có thể thêm -y để tự động xác nhận các câu hỏi mặc định.
+            npm init
+            npm init -y
+
+2.  npm install <package> hoặc npm i <package>: Cài đặt một gói và thêm nó vào dependencies trong package.json.
+            npm install express
+
+3.  npm install <package> --save-dev hoặc npm i <package> -D: Cài đặt một gói nhưng chỉ thêm vào devDependencies.
+            npm install typescript --save-dev
+
+4.  npm start: Chạy dự án. Câu lệnh này cần phải được định nghĩa trong phần scripts của tệp package.json 
+        (ví dụ: "start": "node index.js").
+            npm start
+
+5.  npm install -g <package>: Cài đặt một gói để sử dụng toàn cục trên hệ thống.
+            npm install -g nodemon
+
+6.  Cập nhật các gói đã cài đặt trong dự án lên phiên bản mới nhất dựa trên package.json.
+            npm update
+    
+7.  Kiểm tra các gói nào đã có phiên bản mới hơn mà bạn chưa cập nhật.
+            npm outdated
+
+8.  npm uninstall <package> hoặc npm rm <package>: Gỡ bỏ một gói đã cài đặt và xóa khỏi dependencies.
+            npm uninstall express
+
+9.  rm -rf node_modules && npm install (Linux/Mac) hoặc rmdir /s /q node_modules && npm install (Windows): 
+    Xóa thư mục node_modules và cài đặt lại toàn bộ gói từ package.json.
+            npm install
+
+10. npm run <script-name>: Chạy một script tùy chỉnh được định nghĩa trong phần scripts của package.json.
+            npm run build
+
+11. npm install <package>@<version>: Cài đặt một phiên bản cụ thể của gói.
+            npm install express@4.17.1
+
+12. npm view <package>: Xem thông tin chi tiết về gói, bao gồm phiên bản, license, và các thông tin khác.
+            npm view express
+
+13. npm dist-tag add <package>@<version> <tag>: Gán một tag cho một phiên bản cụ thể của gói.
+            npm dist-tag add express@4.17.1 stable
+
+14. npm dist-tag ls <package>: Hiển thị danh sách các tag và phiên bản tương ứng của gói.
+            npm dist-tag ls express
+
+
+*****Advanced*****
+1.  npm run <script>: Chạy các script được định nghĩa trong package.json.
+
+2.  npm run-script <script> -- <args>: Truyền tham số cho script khi chạy.
+            npm run build -- --env=production
+
+3.  npm lifecycle: Chạy các lệnh trước và sau khi cài đặt hoặc chạy một script. 
+    Ví dụ: preinstall, postinstall, prebuild, postbuild, giúp tự động hóa nhiều thao tác hơn trong 
+    quá trình phát triển.
+
+4.  npm cache clean --force: Xóa bộ nhớ cache của NPM. Lệnh này thường được dùng khi gặp vấn đề về
+    phiên bản cũ hay lỗi không tương thích.
+            npm cache clean --force
+
+5.  npm cache verify: Kiểm tra và sửa chữa bộ nhớ cache nếu có vấn đề.
+            npm cache verify
+
+6.  npm ci: Cài đặt dự án dựa trên package-lock.json thay vì package.json. 
+    Lệnh này nhanh và đáng tin cậy hơn npm install trong CI/CD hoặc khi muốn cài đặt đúng như 
+    phiên bản đã được khoá lại.
+            npm ci
+
+7.  npm shrinkwrap: Tạo một tệp npm-shrinkwrap.json, tương tự như package-lock.json nhưng dùng 
+    để khóa các phiên bản cho các dự án hoặc thư viện có thể chia sẻ.
+
+8.  npm init -w <workspace>: Khởi tạo một workspace mới trong một dự án lớn.
+            npm init -w packages/frontend
+
+9.  npm install --workspaces: Cài đặt các dependencies cho tất cả các workspace trong một monorepo.
+
+10. npm run <script> -ws: Chạy một script trên tất cả các workspace.
+            npm run build -ws
+
+11. npm audit: Kiểm tra các vấn đề bảo mật trong các package đã cài đặt.
+            npm audit
+
+12. npm audit fix: Tự động sửa các vấn đề bảo mật (nếu có thể) bằng cách nâng cấp các gói lên phiên bản an toàn hơn.
+            npm audit fix
+
+13. npm audit fix --force: Cố gắng sửa chữa tất cả các vấn đề bảo mật, có thể cập nhật cả các phiên bản không tương thích.
+
+14. npm prune: Xóa các gói không nằm trong package.json. Điều này hữu ích khi bạn muốn dọn dẹp thư mục node_modules.
+            npm prune
+
+15. npm link: Tạo một liên kết (symlink) đến một package toàn cục hoặc liên kết một package toàn cục đến dự án hiện tại, 
+    giúp phát triển và thử nghiệm các package tự phát triển một cách nhanh chóng.
+            npm link <package-name>
+
+16. Bạn có thể cài đặt package trực tiếp từ một repository GitHub:
+            npm install username/repository
+
+17. Hoặc từ một branch cụ thể:
+            npm install username/repository#branch
+
+18. npm outdated: Kiểm tra xem các package trong dự án có phiên bản mới hơn hay không. 
+    Lệnh này sẽ liệt kê các package cần cập nhật.
+            npm outdated
+
+19. npm update <package>: Cập nhật một package lên phiên bản mới nhất dựa trên 
+    phạm vi version được chỉ định trong package.json.
+            npm update express
+
+20. npm-run-all: Một package phụ trợ cho phép chạy nhiều script song song hoặc theo tuần tự. 
+    Bạn có thể cài đặt bằng:
+            npm install npm-run-all --save-dev
+
+    Sau đó, bạn có thể sử dụng nó trong package.json
+            "scripts": {
+                "build": "npm-run-all clean transpile bundle"
+            }
+
+21. npm outdated: Kiểm tra xem các package trong dự án có phiên bản mới hơn hay không. 
+    Lệnh này sẽ liệt kê các package cần cập nhật.
+            npm outdated
+
+22. npm update <package>: Cập nhật một package lên phiên bản mới nhất dựa trên phạm vi version được chỉ định trong package.json.
+            npm update express
+
+23. npm-run-all: Một package phụ trợ cho phép chạy nhiều script song song hoặc theo tuần tự. Bạn có thể cài đặt bằng:
+            npm install npm-run-all --save-dev
+
+    Sau đó, bạn có thể sử dụng nó trong package.json
+            "scripts": {
+            "build": "npm-run-all clean transpile bundle"
+            }
+
+
+
+
