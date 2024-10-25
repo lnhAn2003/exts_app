@@ -1,0 +1,129 @@
+**Rest operator** (`...`) trong JavaScript là một tính năng mạnh mẽ được sử dụng để gom các phần tử còn lại của mảng hoặc các thuộc tính của đối tượng thành một mảng hoặc một đối tượng riêng biệt. Rest operator giúp dễ dàng thao tác với số lượng tham số không xác định trong hàm và làm việc với mảng hoặc đối tượng trong việc tách dữ liệu.
+
+### 1. Sử dụng Rest Operator trong Hàm
+Khi sử dụng với hàm, rest operator cho phép nhận số lượng tham số không xác định và gom chúng lại thành một mảng.
+
+#### 1.1. Gom các tham số thành mảng
+- Ví dụ dưới đây minh họa cách sử dụng rest operator để gom các tham số thành một mảng:
+  
+  ```javascript
+  function sum(...numbers) {
+    return numbers.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  }
+
+  console.log(sum(1, 2, 3)); // Kết quả: 6
+  console.log(sum(4, 5, 6, 7)); // Kết quả: 22
+  ```
+
+  - Trong ví dụ này, `...numbers` gom tất cả các tham số truyền vào hàm `sum` thành một mảng `numbers`, sau đó sử dụng `reduce` để tính tổng các phần tử trong mảng.
+
+#### 1.2. Kết hợp với các tham số khác
+- Rest operator có thể được sử dụng cùng với các tham số khác trong hàm, nhưng phải đặt ở cuối danh sách tham số.
+
+  ```javascript
+  function greet(greeting, ...names) {
+    return `${greeting}, ${names.join(" và ")}!`;
+  }
+
+  console.log(greet("Xin chào", "Nam", "Lan", "Mai")); // Kết quả: "Xin chào, Nam và Lan và Mai!"
+  ```
+
+  - Trong ví dụ này, `greeting` là tham số đầu tiên, còn `...names` gom các tham số còn lại vào một mảng `names`.
+
+### 2. Rest Operator trong Destructuring (Giải nén)
+Rest operator cũng có thể được sử dụng trong **array destructuring** và **object destructuring** để tách phần tử hoặc thuộc tính còn lại.
+
+#### 2.1. Array Destructuring
+- Sử dụng rest operator để lấy các phần tử còn lại trong một mảng.
+
+  ```javascript
+  const [first, second, ...rest] = [1, 2, 3, 4, 5];
+  console.log(first); // Kết quả: 1
+  console.log(second); // Kết quả: 2
+  console.log(rest); // Kết quả: [3, 4, 5]
+  ```
+
+  - Trong ví dụ này, `first` và `second` lấy hai phần tử đầu tiên của mảng, còn `...rest` chứa các phần tử còn lại.
+
+#### 2.2. Object Destructuring
+- Sử dụng rest operator để lấy các thuộc tính còn lại của đối tượng.
+
+  ```javascript
+  const person = {
+    name: "Nam",
+    age: 30,
+    city: "Hanoi"
+  };
+
+  const { name, ...rest } = person;
+  console.log(name); // Kết quả: "Nam"
+  console.log(rest); // Kết quả: { age: 30, city: "Hanoi" }
+  ```
+
+  - Trong ví dụ này, thuộc tính `name` được tách ra riêng, còn `...rest` chứa các thuộc tính còn lại của đối tượng.
+
+### 3. Rest Operator và Spread Operator
+- Mặc dù **rest operator** và **spread operator** đều sử dụng dấu `...`, chúng có chức năng khác nhau tùy vào ngữ cảnh sử dụng:
+  - **Rest operator** được dùng để **gom** các phần tử lại thành một mảng hoặc đối tượng.
+  - **Spread operator** được dùng để **mở rộng** các phần tử của một mảng hoặc thuộc tính của một đối tượng.
+
+#### Ví dụ so sánh:
+```javascript
+// Sử dụng rest operator để gom các tham số thành mảng
+function display(...args) {
+  console.log(args); // Kết quả: Mảng chứa tất cả các tham số
+}
+
+display(1, 2, 3); // [1, 2, 3]
+
+// Sử dụng spread operator để mở rộng các phần tử của mảng
+const arr = [1, 2, 3];
+console.log(...arr); // Kết quả: 1 2 3
+```
+
+### 4. Một số lưu ý khi sử dụng Rest Operator
+- **Rest operator chỉ có thể được sử dụng ở cuối danh sách tham số** khi dùng trong hàm. Điều này đảm bảo rằng các tham số còn lại được gom chính xác vào mảng.
+  
+  ```javascript
+  // Sai: Rest operator không thể đặt trước tham số khác
+  // function myFunction(...args, last) {}
+
+  // Đúng: Rest operator đặt ở cuối danh sách tham số
+  function myFunction(first, ...args) {}
+  ```
+
+- Khi sử dụng **array destructuring** hoặc **object destructuring**, rest operator có thể giúp lấy ra các phần tử hoặc thuộc tính chưa biết trước số lượng, giúp mã trở nên linh hoạt hơn.
+
+### 5. Ứng dụng thực tế của Rest Operator
+#### 5.1. Xây dựng hàm nhận số lượng tham số không xác định
+- Khi cần một hàm xử lý số lượng tham số không cố định, rest operator rất hữu ích.
+
+  ```javascript
+  function concatenateStrings(...strings) {
+    return strings.join(", ");
+  }
+
+  console.log(concatenateStrings("Nam", "Lan", "Mai")); // Kết quả: "Nam, Lan, Mai"
+  ```
+
+#### 5.2. Tách thuộc tính của đối tượng và sử dụng phần còn lại
+- Khi làm việc với các đối tượng, bạn có thể tách một số thuộc tính nhất định và lấy phần còn lại để xử lý sau.
+
+  ```javascript
+  const user = {
+    id: 1,
+    name: "Nam",
+    age: 30,
+    email: "nam@example.com"
+  };
+
+  const { id, ...userDetails } = user;
+  console.log(id); // Kết quả: 1
+  console.log(userDetails); // Kết quả: { name: "Nam", age: 30, email: "nam@example.com" }
+  ```
+
+### Kết luận
+**Rest operator** là một tính năng mạnh mẽ và tiện lợi của JavaScript, 
+giúp thao tác với mảng và đối tượng dễ dàng hơn. 
+Bằng cách gom các phần tử hoặc thuộc tính lại thành một mảng hoặc đối tượng, 
+rest operator giúp xây dựng các hàm linh hoạt và xử lý dữ liệu một cách gọn gàng.

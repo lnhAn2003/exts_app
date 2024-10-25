@@ -1,0 +1,258 @@
+File `package.json` là một thành phần quan trọng trong dự án Node.js, chứa thông tin về dự án và các dependencies mà dự án sử dụng. Dưới đây là các thành phần chính và ý nghĩa của chúng, đặc biệt là phần `scripts`:
+
+### 1. **Các thành phần chính trong `package.json`**
+
+1. **`name`**: Tên của dự án hoặc package. Đây là một định danh duy nhất (trong trường hợp bạn phát hành lên NPM).
+   ```json
+   "name": "my-project"
+   ```
+
+2. **`version`**: Phiên bản hiện tại của dự án. Thông thường dùng theo dạng `major.minor.patch`.
+   ```json
+   "version": "1.0.0"
+   ```
+
+3. **`description`**: Mô tả ngắn gọn về dự án hoặc package.
+   ```json
+   "description": "A simple Node.js project."
+   ```
+
+4. **`main`**: Tên file chính của dự án. Mặc định là `index.js`.
+   ```json
+   "main": "index.js"
+   ```
+
+5. **`scripts`**: Một đối tượng chứa các lệnh script mà bạn có thể chạy bằng `npm run <script-name>`. Phần này cho phép bạn định nghĩa các lệnh tuỳ chỉnh hoặc chạy các lệnh tích hợp sẵn.
+   ```json
+   "scripts": {
+     "start": "node index.js",
+     "test": "echo \"Error: no test specified\" && exit 1"
+   }
+   ```
+
+6. **`keywords`**: Một mảng chứa các từ khóa mô tả dự án, giúp tìm kiếm dự án dễ dàng hơn nếu phát hành trên NPM.
+   ```json
+   "keywords": ["node", "express", "api"]
+   ```
+
+7. **`author`**: Tác giả hoặc nhóm phát triển dự án.
+   ```json
+   "author": "Your Name"
+   ```
+
+8. **`license`**: Loại giấy phép mà dự án áp dụng.
+   ```json
+   "license": "MIT"
+   ```
+
+9. **`dependencies`**: Các package cần thiết để dự án hoạt động. Các package này sẽ được cài đặt khi chạy `npm install`.
+   ```json
+   "dependencies": {
+     "express": "^4.17.1"
+   }
+   ```
+
+10. **`devDependencies`**: Các package chỉ cần thiết trong quá trình phát triển, không cần cho sản phẩm cuối cùng.
+    ```json
+    "devDependencies": {
+      "nodemon": "^2.0.7"
+    }
+    ```
+
+11. **`peerDependencies`**: Chỉ định các package mà dự án của bạn mong đợi các dự án khác đã cài đặt. Các package này không được tự động cài đặt mà chỉ thông báo nếu không có.
+    ```json
+    "peerDependencies": {
+      "react": "^16.0.0"
+    }
+    ```
+
+12. **`optionalDependencies`**: Các dependencies không bắt buộc; nếu không cài đặt được thì không ảnh hưởng đến dự án.
+    ```json
+    "optionalDependencies": {
+      "fsevents": "^1.2.7"
+    }
+    ```
+
+### 2. **Phần `scripts` và ý nghĩa của nó**
+
+Phần `scripts` trong `package.json` là nơi bạn định nghĩa các lệnh để tự động hóa các tác vụ phát triển và quản lý dự án. Bạn có thể chạy các script này bằng lệnh:
+   ```bash
+   npm run <script-name>
+   ```
+
+Dưới đây là một số script phổ biến và mặc định:
+
+1. **`start`**: Script này thường được sử dụng để khởi chạy dự án. Khi bạn chạy `npm start`, nó sẽ thực thi lệnh được gán cho script này. Đây là script mặc định, nên khi bạn chạy `npm start`, bạn không cần dùng `run`.
+   ```json
+   "scripts": {
+     "start": "node index.js"
+   }
+   ```
+   - **Khi nào `start` được thực thi?**
+     - Khi bạn chạy `npm start`.
+     - Khi bạn triển khai dự án trên một số dịch vụ hosting, họ có thể tự động gọi script này.
+
+2. **`test`**: Script mặc định cho việc chạy các bài kiểm thử. Khi bạn chạy `npm test`, script này sẽ được thực thi. 
+   ```json
+   "scripts": {
+     "test": "mocha"
+   }
+   ```
+   - **Khi nào `test` được thực thi?**
+     - Khi bạn chạy `npm test` hoặc khi các hệ thống CI/CD như Jenkins, Travis CI, GitHub Actions kiểm tra mã nguồn.
+
+3. **`prestart` và `poststart`**: Bạn có thể định nghĩa các script chạy trước (`prestart`) hoặc sau (`poststart`) khi `npm start` được gọi.
+   ```json
+   "scripts": {
+     "prestart": "echo 'Running prestart tasks...'",
+     "start": "node index.js",
+     "poststart": "echo 'Running poststart tasks...'"
+   }
+   ```
+   - **Khi nào `prestart` và `poststart` được thực thi?**
+     - `prestart` được gọi trước khi `start` chạy.
+     - `poststart` được gọi sau khi `start` kết thúc.
+
+4. **`build`**: Thường dùng để build dự án, đặc biệt là với các dự án frontend như React, Angular, hay Vue.
+   ```json
+   "scripts": {
+     "build": "webpack --mode production"
+   }
+   ```
+
+5. **`pretest` và `posttest`**: Tương tự như `prestart` và `poststart`, nhưng áp dụng cho script `test`.
+   ```json
+   "scripts": {
+     "pretest": "eslint .",
+     "test": "mocha",
+     "posttest": "echo 'Tests completed!'"
+   }
+   ```
+
+6. **`prebuild` và `postbuild`**: Chạy các lệnh trước và sau khi build dự án.
+   ```json
+   "scripts": {
+     "prebuild": "rimraf dist",
+     "build": "webpack --mode production",
+     "postbuild": "echo 'Build finished!'"
+   }
+   ```
+
+### 3. **Tạo và sử dụng các script tuỳ chỉnh**
+
+Bạn có thể tạo các script tuỳ chỉnh theo nhu cầu, ví dụ:
+   ```json
+   "scripts": {
+     "dev": "nodemon index.js",
+     "lint": "eslint .",
+     "deploy": "npm run build && npm start"
+   }
+   ```
+- **`npm run dev`**: Chạy `nodemon` để theo dõi và khởi chạy lại server khi có thay đổi.
+- **`npm run lint`**: Chạy ESLint để kiểm tra lỗi mã nguồn.
+- **`npm run deploy`**: Chạy script `build` trước, sau đó khởi động server.
+
+### 4. **Lưu ý về scripts mặc định**
+
+- **Script mặc định**: Ngoài `start` và `test`, các script khác sẽ cần bạn dùng `npm run <script-name>` để gọi.
+- **Kết hợp nhiều script**: Bạn có thể kết hợp nhiều script với `&&` hoặc sử dụng `npm-run-all` để chạy song song hoặc tuần tự.
+
+Trong `package.json`, phần `scripts` là nơi bạn có thể định nghĩa các lệnh tùy chỉnh hoặc sử dụng các lệnh mặc định của NPM. Các **default scripts** trong NPM sẽ được tự động nhận diện và thực thi khi bạn sử dụng các lệnh tương ứng. Dưới đây là các default scripts chính và cách chúng được thực thi:
+
+### 1. **Default Scripts và Cách Thực Thi**
+
+1. **`start`**:
+   - Script này được dùng để khởi động dự án. Khi bạn chạy lệnh:
+     ```bash
+     npm start
+     ```
+   - NPM sẽ tìm script `start` trong `package.json` và thực thi lệnh tương ứng.
+   - Nếu không có script `start`, NPM sẽ mặc định chạy lệnh `node server.js` nếu file `server.js` tồn tại.
+   - **Khi nào `start` được thực thi?**
+     - Khi bạn chạy `npm start` hoặc chỉ `npm`.
+     - Khi deploy dự án trên các dịch vụ hosting hỗ trợ Node.js (như Heroku), script này thường được sử dụng tự động.
+
+2. **`test`**:
+   - Script `test` thường được dùng để chạy các bài kiểm thử của dự án. Khi bạn chạy:
+     ```bash
+     npm test
+     ```
+   - NPM sẽ tìm và thực thi script `test` trong `package.json`. Nếu không có, nó sẽ hiển thị thông báo mặc định:
+     ```bash
+     echo "Error: no test specified" && exit 1
+     ```
+   - **Khi nào `test` được thực thi?**
+     - Khi bạn chạy `npm test`.
+     - Khi các hệ thống CI/CD (như Jenkins, Travis CI, hoặc GitHub Actions) kiểm tra mã nguồn, chúng sẽ tự động gọi `npm test`.
+
+3. **`preinstall`, `install`, `postinstall`**:
+   - Các script này liên quan đến quá trình cài đặt package.
+     - **`preinstall`**: Được chạy trước khi cài đặt bất kỳ dependencies nào.
+     - **`install`**: Được thực thi sau khi tải xuống và cài đặt dependencies. Bạn có thể sử dụng script này để chạy các thiết lập cần thiết sau khi cài đặt.
+     - **`postinstall`**: Được chạy sau khi tất cả các package đã được cài đặt xong. Thường được dùng để xây dựng (build) dự án hoặc cấu hình lại file nếu cần.
+   - **Khi nào các script này được thực thi?**
+     - Khi bạn chạy `npm install`.
+
+4. **`preuninstall`, `uninstall`, `postuninstall`**:
+   - Các script này chạy trong quá trình gỡ bỏ các package.
+     - **`preuninstall`**: Được thực thi trước khi package bị gỡ bỏ.
+     - **`uninstall`**: Được thực thi khi package đang được gỡ bỏ.
+     - **`postuninstall`**: Được chạy sau khi package đã bị gỡ bỏ.
+   - **Khi nào các script này được thực thi?**
+     - Khi bạn chạy `npm uninstall <package>`.
+
+5. **`prebuild`, `build`, `postbuild`**:
+   - Script `build` thường được sử dụng để xây dựng (compile hoặc bundle) mã nguồn, đặc biệt trong các dự án frontend hoặc dự án sử dụng TypeScript.
+     - **`prebuild`**: Chạy trước khi `build` được thực thi.
+     - **`build`**: Chạy lệnh chính để build dự án.
+     - **`postbuild`**: Chạy sau khi `build` kết thúc, thường để thực hiện các tác vụ bổ sung như sao chép file hoặc thông báo kết quả.
+   - **Khi nào các script này được thực thi?**
+     - Khi bạn chạy `npm run build`.
+
+6. **`prestart`, `poststart`**:
+   - Các script này được chạy tự động trước và sau khi `start` được thực thi:
+     - **`prestart`**: Chạy trước `start`, thường dùng để chuẩn bị môi trường hoặc cài đặt cần thiết.
+     - **`poststart`**: Chạy sau `start`, dùng để dọn dẹp hoặc kiểm tra kết quả sau khi khởi động.
+   - **Khi nào các script này được thực thi?**
+     - `prestart` chạy trước khi `npm start`.
+     - `poststart` chạy sau khi `npm start`.
+
+7. **`pretest`, `posttest`**:
+   - Tương tự như `prestart` và `poststart`, các script này được sử dụng để thực thi lệnh trước và sau khi `test` được gọi.
+     - **`pretest`**: Thường được dùng để kiểm tra cú pháp hoặc dọn dẹp trước khi chạy các bài kiểm thử.
+     - **`posttest`**: Thường được dùng để xử lý kết quả hoặc báo cáo sau khi kiểm thử.
+   - **Khi nào các script này được thực thi?**
+     - `pretest` chạy trước khi `npm test`.
+     - `posttest` chạy sau khi `npm test`.
+
+8. **`prerun-script` và `postrun-script`**:
+   - Đối với bất kỳ script tùy chỉnh nào, bạn có thể thêm `pre` hoặc `post` để tạo các script chạy trước và sau script chính.
+     - Ví dụ, nếu bạn có script `deploy`, bạn có thể tạo `predeploy` và `postdeploy` để thực thi các lệnh trước và sau khi deploy.
+   - **Khi nào các script này được thực thi?**
+     - Ví dụ, nếu bạn chạy `npm run deploy`, NPM sẽ tự động chạy `predeploy` trước và `postdeploy` sau.
+
+### 2. **Cách NPM thực thi các Default Scripts**
+
+- Khi bạn gọi một script mặc định (như `npm start`, `npm test`), NPM sẽ kiểm tra `package.json` để tìm lệnh tương ứng và thực thi. Nếu không có, nó sẽ sử dụng các hành động mặc định hoặc hiển thị thông báo lỗi.
+- Các script `pre` và `post` là cơ chế tự động hóa giúp bạn kiểm soát chi tiết hơn các quá trình trước và sau khi thực hiện các hành động chính như `start`, `test`, hoặc `build`.
+
+### 3. **Ví dụ về Phần `scripts` Trong `package.json`**
+
+```json
+"scripts": {
+  "prestart": "echo 'Preparing to start...'",
+  "start": "node index.js",
+  "poststart": "echo 'Application has started'",
+  "test": "jest",
+  "pretest": "eslint .",
+  "posttest": "echo 'Tests completed!'",
+  "build": "webpack --mode production",
+  "prebuild": "rimraf dist",
+  "postbuild": "echo 'Build finished!'"
+}
+```
+
+Trong ví dụ trên:
+- Khi bạn chạy `npm start`, NPM sẽ lần lượt chạy `prestart`, `start`, và `poststart`.
+- Khi bạn chạy `npm test`, NPM sẽ chạy `pretest`, `test`, và `posttest`.
+- Khi bạn chạy `npm run build`, NPM sẽ chạy `prebuild`, `build`, và `postbuild`.

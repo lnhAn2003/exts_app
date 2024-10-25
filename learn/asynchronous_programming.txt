@@ -1,0 +1,209 @@
+Trong JavaScript, lập trình bất đồng bộ (asynchronous programming) rất phổ biến và quan trọng, đặc biệt khi làm việc với các tác vụ tốn thời gian như gọi API, đọc/ghi tệp, hoặc chờ phản hồi từ mạng. Ba kỹ thuật phổ biến để xử lý bất đồng bộ trong JavaScript là **Callback**, **Promise**, và **Async / Await**.
+
+### 1. Callback
+**Callback** là một hàm được truyền vào một hàm khác dưới dạng tham số, và được gọi lại sau khi hàm ban đầu hoàn tất tác vụ. Đây là cách cổ điển để xử lý các tác vụ bất đồng bộ.
+
+#### Ví dụ:
+```javascript
+function downloadData(url, callback) {
+  setTimeout(() => {
+    console.log(`Đã tải dữ liệu từ ${url}`);
+    callback("Dữ liệu đã được tải về");
+  }, 2000); // Giả lập việc tải dữ liệu mất 2 giây
+}
+
+function processData(data) {
+  console.log(`Xử lý: ${data}`);
+}
+
+downloadData("https://example.com", processData);
+```
+
+- Trong ví dụ này, hàm `downloadData` chờ 2 giây rồi gọi hàm `callback`, tức là `processData`, để xử lý dữ liệu đã tải về.
+- Cách sử dụng callback có thể dẫn đến tình trạng **callback hell** khi có nhiều callback lồng nhau, làm mã trở nên khó đọc và duy trì.
+
+#### Ví dụ về Callback Hell:
+```javascript
+function task1(callback) {
+  setTimeout(() => {
+    console.log("Task 1 hoàn thành");
+    callback();
+  }, 1000);
+}
+
+function task2(callback) {
+  setTimeout(() => {
+    console.log("Task 2 hoàn thành");
+    callback();
+  }, 1000);
+}
+
+function task3(callback) {
+  setTimeout(() => {
+    console.log("Task 3 hoàn thành");
+    callback();
+  }, 1000);
+}
+
+task1(() => {
+  task2(() => {
+    task3(() => {
+      console.log("Tất cả task đã hoàn thành");
+    });
+  });
+});
+```
+
+### 2. Promise
+**Promise** là một cách thay thế cho callback để xử lý các tác vụ bất đồng bộ, cho phép bạn làm việc với mã lồng nhau một cách rõ ràng hơn. Một Promise đại diện cho một giá trị chưa có ngay lập tức nhưng có thể có trong tương lai.
+
+- Promise có ba trạng thái chính:
+  - **Pending**: Đang chờ kết quả.
+  - **Fulfilled**: Đã hoàn thành và trả về kết quả.
+  - **Rejected**: Bị từ chối và trả về lỗi.
+
+#### Cách tạo một Promise:
+```javascript
+const myPromise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    const success = true;
+    if (success) {
+      resolve("Thành công!");
+    } else {
+      reject("Thất bại!");
+    }
+  }, 2000);
+});
+```
+
+#### Cách sử dụng Promise với `.then()` và `.catch()`:
+```javascript
+myPromise
+  .then((result) => {
+    console.log(result); // Kết quả: "Thành công!" nếu thành công
+  })
+  .catch((error) => {
+    console.error(error); // Kết quả: "Thất bại!" nếu gặp lỗi
+  });
+```
+
+#### Ví dụ Promise chuỗi:
+```javascript
+const task1 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 1 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+const task2 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 2 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+const task3 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 3 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+task1()
+  .then(task2)
+  .then(task3)
+  .then(() => {
+    console.log("Tất cả task đã hoàn thành");
+  });
+```
+
+### 3. Async / Await
+**Async / Await** là cú pháp giúp làm việc với Promise trở nên dễ dàng hơn, giúp mã bất đồng bộ trông giống như mã đồng bộ.
+
+- **Async** là một từ khóa được sử dụng trước một hàm để báo hiệu rằng hàm này sẽ trả về một Promise.
+- **Await** được sử dụng để chờ một Promise hoàn thành trước khi tiếp tục thực thi phần tiếp theo của mã.
+
+#### Ví dụ sử dụng Async / Await:
+```javascript
+function downloadData() {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve("Dữ liệu đã được tải");
+    }, 2000);
+  });
+}
+
+async function getData() {
+  try {
+    const data = await downloadData();
+    console.log(data); // Kết quả: "Dữ liệu đã được tải"
+  } catch (error) {
+    console.error("Lỗi:", error);
+  }
+}
+
+getData();
+```
+
+#### Ví dụ Async / Await với nhiều tác vụ:
+```javascript
+const task1 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 1 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+const task2 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 2 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+const task3 = () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      console.log("Task 3 hoàn thành");
+      resolve();
+    }, 1000);
+  });
+};
+
+async function runTasks() {
+  await task1();
+  await task2();
+  await task3();
+  console.log("Tất cả task đã hoàn thành");
+}
+
+runTasks();
+```
+
+### So sánh Callback, Promise, và Async / Await
+
+| Tính năng                   | Callback                                   | Promise                                  | Async / Await                                      |
+|-----------------------------|--------------------------------------------|------------------------------------------|---------------------------------------------------|
+| Cách viết                   | Dễ bị "callback hell"                      | Gọn gàng hơn với `.then()` và `.catch()` | Gọn gàng, giống mã đồng bộ                        |
+| Xử lý lỗi                   | Khó kiểm soát                              | Sử dụng `.catch()`                        | Sử dụng `try/catch`                                 |
+| Dễ đọc và duy trì           | Khó đọc khi lồng nhiều callback            | Dễ hơn callback                           | Rất dễ đọc và bảo trì                              |
+| Tính tương thích            | Hỗ trợ từ lâu, phổ biến                     | Được giới thiệu trong ES6                 | Được giới thiệu trong ES8 (ES2017)                 |
+| Xử lý chuỗi các tác vụ      | Có thể làm nhưng phức tạp                  | Dễ dàng hơn                               | Rất trực quan và giống như mã đồng bộ truyền thống |
+
+### Kết luận
+- **Callback** là cách tiếp cận cơ bản nhưng có thể gây ra "callback hell" khi có quá nhiều lồng nhau.
+- **Promise** giúp giảm bớt "callback hell" và cho phép xử lý chuỗi các tác vụ một cách gọn gàng.
+- **Async / Await** mang lại cú pháp đơn giản và dễ đọc, làm cho mã bất đồng bộ giống mã đồng bộ hơn.
+
+Việc lựa chọn giữa các kỹ thuật này phụ thuộc vào tình huống cụ thể, nhưng trong hầu hết các trường hợp, **Async / Await** thường là lựa chọn tốt nhất để làm việc với các tác vụ bất đồng bộ trong JavaScript.
