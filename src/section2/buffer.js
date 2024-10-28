@@ -25,7 +25,5 @@
     console.log(buffer[2]); 
     const buffer1 = Buffer.from('ABC');
     const buffer2 = Buffer.from('ABD');
-    console.log(buffer1.compare(buffer2)); // Kết quả: -1 (buffer1 < buffer2)
-
-
+    console.log(buffer1.compare(buffer2)); 
 }

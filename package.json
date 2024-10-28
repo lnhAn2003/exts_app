@@ -2,13 +2,11 @@
   "name": "my-express-ts-app",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "start": "ts-node src/section4SQL/index.ts",
+    "start": "node src/demo/index.js",
     "build": "tsc",
-    "serve": "node app.js",
-    "dev": "node src/demo/index.js"
+    "dev": "ts-node src/section4SQL/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +23,7 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.5",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "nodemon": "^2.0.22"
   }
 }

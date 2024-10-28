@@ -1,6 +1,5 @@
-const ImportClass = require('./class.js');
-const Animal = require('./constructor.js');
-const User = require('./private.js')
+import ImpoerClass from "../section3/class.js"
+import Animal from "../section3/constructor.js"
 
 const example = new ImportClass();
 
