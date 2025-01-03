@@ -1,0 +1,56 @@
+# Node.js specific files and folders
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment variables
+.env
+
+# Logs
+logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Runtime data
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Database files
+*.sqlite3
+*.db
+
+# Sequelize files
+config/config.json
+
+# MacOS-specific files
+.DS_Store
+
+# Windows-specific files
+Thumbs.db
+
+# Visual Studio Code files
+.vscode/
+
+# IDE or editor specific
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Coverage directory used by testing tools
+coverage/
+.nyc_output/
+
+# Jest testing
+jest-test-results.json

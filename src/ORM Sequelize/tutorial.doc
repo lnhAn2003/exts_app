@@ -1,0 +1,107 @@
+***Step 1: Initialize a new project
+
+    bash
+        npm init -y
+        npm install sequelize sequelize-cli mysql2
+
+***Step 2: Set up sequelize
+
+    bash
+        npx sequelize-cli init
+
+***Step 3: Configure Database connection
+
+    1. Open config/config.json
+    2. Update Configuration with my Database
+
+        {
+            "development": {
+                "username": "your_username",            //"username": "lnhan_intern"
+                "password": "your_password",            //"password": "Phuong@n2011"
+                "database": "your_database",            //"database": "libraryDB"
+                "host": "127.0.0.1",                    //"host": "127.0.0.1",
+                "dialect": "mysql"                      //"dialect": "mysql"
+        },
+}
+
+***Step 4: Create Models and Migrations
+
+    bash    
+        npx sequelize-cli model:generate --name Author --attributes name:string,country:string
+        npx sequelize-cli model:generate --name Book --attributes title:string,author_id:integer,published_year:integer,price:decimal
+        npx sequelize-cli model:generate --name Borrower --attributes name:string,membership_date:date
+        npx sequelize-cli model:generate --name BorrowRecord --attributes borrower_id:integer,book_id:integer,borrow_date:date,return_date:date
+
+***Step 5: Set up Model Associations
+
+    Example: models/author.js
+        
+        //
+        'use strict';
+        const { Model } = require('sequelize');
+
+        module.exports = (sequelize, DataTypes) => {
+            class Author extends Model {
+                static associate(models) {
+                    Author.hasMany(models.Book, {
+                        foreignKey: 'author_id',
+                        as: 'books'
+                    });
+                }
+            }
+            Author.init({
+                name: DataTypes.STRING,
+                country: DataTypes.STRING
+            }, {
+                sequelize,
+                modelName: 'Author',
+                timestamps: false
+            });
+            return Author;
+        };
+        //
+
+***Step 6: Run Migrations
+
+    bash    
+        npx sequelize-cli db:migrate
+
+***Step 7: Seed the database (Optional)
+
+    bash    
+        npx sequelize-cli seed:generate --name seed-authors
+
+***Step 8: Test the set up
+    
+    Create a test.js file in the root directory to query data and test relationships:
+        
+        //
+        const { Author, Book, Borrower, BorrowRecord } = require('./models');
+
+        async function testDatabase() {
+            try {
+                const authors = await Author.findAll({
+                    include: [{ model: Book, as: 'books' }]
+                });
+                console.log("All Authors:", JSON.stringify(authors, null, 2));
+
+                const borrower = await Borrower.findOne({
+                    where: { name: 'John Doe' },
+                    include: [{ model: BorrowRecord, as: 'borrow_records', include: ['book'] }]
+                });
+                console.log("John Doe's Borrow Records:", JSON.stringify(borrower, null, 2));
+            } catch (error) {
+                console.error("Error in testDatabase:", error);
+            }
+        }
+
+        testDatabase();
+        //
+
+    Run the script:
+
+        bash
+            node test.js
+
+
+***DONE***
